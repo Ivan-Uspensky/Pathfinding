@@ -13,18 +13,12 @@ public class Unit : MonoBehaviour {
 	public Transform covers;
 	public Transform CoverZero;
 
-	// public Transform target;
-
 	Vector2[] path;
 	int targetIndex;
 
 	void Awake() {
-		// grid = GetComponent<Grid>();
-		// go = GameObject.Find("Pathfinding").GetComponent(Grid);
-
 		go = GameObject.Find ("Pathfinding");
 		grid = go.GetComponent <Grid> ();
-		Debug.Log(grid);
 	}
 
 	void Start() {
@@ -39,8 +33,7 @@ public class Unit : MonoBehaviour {
 		foreach (Transform child in covers) {
 			currentDistance = Vector3.Distance((Vector2)Player.position, child.position);
 			
-			if (currentDistance < bestDistance && (Mathf.Abs(Mathf.Abs(Player.position.y) - Mathf.Abs(child.position.y)) < 0.2f)) {
-			
+			if (currentDistance < bestDistance && (Mathf.Abs(Mathf.Abs(Player.position.y) - Mathf.Abs(child.position.y)) < 0.4f)) {
 				Vector3 coverSide = Player.InverseTransformPoint(child.position);
 				if (coverSide.x > 0) {
 					//player is on left side, get right cover
@@ -49,11 +42,9 @@ public class Unit : MonoBehaviour {
 					//player is on right side, get left cover
 					closestCover = child.position - child.right;
 				}
-			
 				bestDistance = currentDistance;
 			}
 		}
-
 		return closestCover;
 	}
 
