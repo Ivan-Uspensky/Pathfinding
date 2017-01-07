@@ -80,8 +80,8 @@ public class Unit : MonoBehaviour {
 				if (targetPositionOld != (Vector2)target) {
 					targetPositionOld = (Vector2)target;
 					path = Pathfinding.RequestPath (transform.position, target);
-					// StopCoroutine ("FollowPath");
-					// StartCoroutine ("FollowPath");
+					StopCoroutine ("FollowPath");
+					StartCoroutine ("FollowPath");
 				}	
 			// }
 			
