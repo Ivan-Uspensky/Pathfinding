@@ -80,6 +80,22 @@ public class Unit : MonoBehaviour {
 		}
 	}
 		
+	// IEnumerator RefreshPath() {
+	// 	Vector2 targetPositionOld = (Vector2)Player.position + Vector2.up; // ensure != to target.position initially
+			
+	// 	while (true) {
+	// 		if (targetPositionOld != (Vector2)Player.position) {
+	// 			targetPositionOld = (Vector2)Player.position;
+
+	// 			path = Pathfinding.RequestPath (transform.position, Player.position);
+	// 			StopCoroutine ("FollowPath");
+	// 			StartCoroutine ("FollowPath");
+	// 		}
+
+	// 		yield return new WaitForSeconds (.25f);
+	// 	}
+	// }
+
 	IEnumerator FollowPath() {
 		if (path.Length > 0) {
 			targetIndex = 0;
