@@ -4,6 +4,7 @@ using System.Collections;
 public class Node : IHeapItem<Node> {
 	
 	public bool walkable;
+	public int busy;
 	public Vector2 worldPosition;
 	public int gridX;
 	public int gridY;
@@ -13,11 +14,12 @@ public class Node : IHeapItem<Node> {
 	public Node parent;
 	int heapIndex;
 	
-	public Node(bool _walkable, Vector2 _worldPos, int _gridX, int _gridY) {
+	public Node(bool _walkable, Vector2 _worldPos, int _gridX, int _gridY, int _busy) {
 		walkable = _walkable;
 		worldPosition = _worldPos;
 		gridX = _gridX;
 		gridY = _gridY;
+		busy = _busy;
 	}
 
 	public int fCost {

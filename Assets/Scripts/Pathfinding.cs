@@ -15,11 +15,11 @@ public class Pathfinding : MonoBehaviour {
 		instance = this;
 	}
 
-	public static Vector2[] RequestPath(Vector2 from, Vector2 to) {
-		return instance.FindPath (from, to);
+	public static Vector2[] RequestPath(Vector2 from, Vector2 to, int id) {
+		return instance.FindPath (from, to, id);
 	}
 	
-	Vector2[] FindPath(Vector2 from, Vector2 to) {
+	Vector2[] FindPath(Vector2 from, Vector2 to, int id) {
 		
 		Stopwatch sw = new Stopwatch();
 		sw.Start();

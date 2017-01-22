@@ -36,7 +36,7 @@ public class Grid : MonoBehaviour {
 			for (int y = 0; y < gridSizeY; y ++) {
 				Vector2 worldPoint = worldBottomLeft + Vector2.right * (x * nodeDiameter + nodeRadius) + Vector2.up * (y * nodeDiameter + nodeRadius);
 				bool walkable = (Physics.CheckSphere(worldPoint,nodeRadius,unwalkableMask) == false); // if no collider2D is returned by overlap circle, then this node is walkable
-				grid[x,y] = new Node(walkable,worldPoint, x,y);
+				grid[x,y] = new Node(walkable, worldPoint, x, y, 0);
 			}
 		}
 	}
@@ -94,27 +94,27 @@ public class Grid : MonoBehaviour {
 
 			// top
 			if (InBounds(verticalSearchX, centreY + radius)) {
-				if (grid[verticalSearchX, centreY + radius].walkable) {
+				if (grid[verticalSearchX, centreY + radius].walkable && grid[verticalSearchX, centreY + radius].busy == 0) {
 					return grid [verticalSearchX, centreY + radius];
 				}
 			}
 
 			// bottom
 			if (InBounds(verticalSearchX, centreY - radius)) {
-				if (grid[verticalSearchX, centreY - radius].walkable) {
+				if (grid[verticalSearchX, centreY - radius].walkable && grid[verticalSearchX, centreY + radius].busy == 0) {
 					return grid [verticalSearchX, centreY - radius];
 				}
 			}
 			// right
 			if (InBounds(centreY + radius, horizontalSearchY)) {
-				if (grid[centreX + radius, horizontalSearchY].walkable) {
+				if (grid[centreX + radius, horizontalSearchY].walkable && grid[verticalSearchX, centreY + radius].busy == 0) {
 					return grid [centreX + radius, horizontalSearchY];
 				}
 			}
 
 			// left
 			if (InBounds(centreY - radius, horizontalSearchY)) {
-				if (grid[centreX - radius, horizontalSearchY].walkable) {
+				if (grid[centreX - radius, horizontalSearchY].walkable && grid[verticalSearchX, centreY + radius].busy == 0) {
 					return grid [centreX - radius, horizontalSearchY];
 				}
 			}
@@ -135,7 +135,8 @@ public class Grid : MonoBehaviour {
 				Gizmos.color = Color.red;
 				if (n.walkable)
 					Gizmos.color = Color.white;
-
+				if (n.busy != 0)
+					Gizmos.color = Color.green;
 				Gizmos.DrawCube(n.worldPosition, Vector3.one * (nodeDiameter-.1f));
 			}
 		}

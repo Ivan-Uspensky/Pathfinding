@@ -7,11 +7,18 @@ public class Unit : MonoBehaviour {
 	Grid grid;
 	GameObject go;
 
+	Node childNodeL;
+	Node childNodeR;
+	Node childNode;
+	Node previousChildNote;
+
 	public Transform Player;
 	public float speed = 20;
 	public LayerMask playerLayer;
 	public Transform covers;
 	public Transform CoverZero;
+	public int IdCounter;
+
 
 	Vector2[] path;
 	int targetIndex;
@@ -26,57 +33,73 @@ public class Unit : MonoBehaviour {
 	}
 
 	Vector3 BehaveModel() {
-
 		float currentDistance;
 		float bestDistance = 999f;
 		Vector3 closestCover = CoverZero.position;
+		
+		previousChildNote = grid.NodeFromWorldPoint((Vector2)CoverZero.position);
+		childNode = previousChildNote;
+
 		foreach (Transform child in covers) {
 			currentDistance = Vector3.Distance((Vector2)Player.position, child.position);
 			
+			// childNodeR = grid.NodeFromWorldPoint((Vector2)child.position + (Vector2)child.right);
+			
+			childNode = grid.NodeFromWorldPoint((Vector2)child.position);
+			// childNodeL = grid.NodeFromWorldPoint((Vector2)child.position - (Vector2)child.right);
+			// childNodeL.busy = IdCounter;
+			// if (currentDistance < bestDistance && (Mathf.Abs(Mathf.Abs(Player.position.y) - Mathf.Abs(child.position.y)) < 0.4f)) {
 			if (currentDistance < bestDistance && (Mathf.Abs(Mathf.Abs(Player.position.y) - Mathf.Abs(child.position.y)) < 0.4f)) {
-				Vector3 coverSide = Player.InverseTransformPoint(child.position);
-				if (coverSide.x > 0) {
-					//player is on left side, get right cover
-					closestCover = child.position + child.right;
-				} else {
-					//player is on right side, get left cover
-					closestCover = child.position - child.right;
+				if (childNode.busy == 0 || childNode.busy == IdCounter) {
+					Vector3 coverSide = Player.InverseTransformPoint(child.position);
+					if (coverSide.x > 0) {
+						//player is on left side, get right cover
+						closestCover = child.position + child.right;
+					} else {
+						//player is on right side, get left cover
+						closestCover = child.position - child.right;
+					}
+					bestDistance = currentDistance;
+					childNode.busy = IdCounter;
+					previousChildNote.busy = 0;
+					previousChildNote = childNode;
 				}
-				bestDistance = currentDistance;
 			}
 		}
 		return closestCover;
 	}
 
 	IEnumerator RefreshPath() {
-		
 		Vector3 target = CoverZero.position;
 		Vector2 targetPositionOld = (Vector2)CoverZero.position + Vector2.up; // ensure != to target.position initially
 
+		// Node currentBusyNode;
+		// Node previousBusyNode = grid.NodeFromWorldPoint((Vector2)CoverZero.position);
 		Node currentPlayerPosition;
 		Node previousPlayerPosition = grid.NodeFromWorldPoint((Vector2)Player.position);
 
 		while (true) {
-			target = BehaveModel();
 			
-			currentPlayerPosition = grid.NodeFromWorldPoint((Vector2)Player.position);	
+
+			target = BehaveModel();
+	
+			currentPlayerPosition = grid.NodeFromWorldPoint((Vector2)Player.position);
 			if (currentPlayerPosition.gridX != previousPlayerPosition.gridX) {
 				previousPlayerPosition.walkable = true;
 				previousPlayerPosition = currentPlayerPosition;
 				currentPlayerPosition.walkable = false;
-				
 			}
 
 			// if (target != null) {
 				if (targetPositionOld != (Vector2)target) {
 					targetPositionOld = (Vector2)target;
-					path = Pathfinding.RequestPath (transform.position, target);
+					path = Pathfinding.RequestPath (transform.position, target, IdCounter);
 					StopCoroutine ("FollowPath");
 					StartCoroutine ("FollowPath");
 				}	
 			// }
 			
-			yield return new WaitForSeconds (.25f);
+			yield return new WaitForSeconds (.2f);
 		}
 	}
 		
