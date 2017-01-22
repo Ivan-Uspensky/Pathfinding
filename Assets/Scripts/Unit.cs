@@ -10,7 +10,7 @@ public class Unit : MonoBehaviour {
 	Node childNodeL;
 	Node childNodeR;
 	Node childNode;
-	Node previousChildNote;
+	Node previousChildNode;
 
 	public Transform Player;
 	public float speed = 20;
@@ -37,18 +37,16 @@ public class Unit : MonoBehaviour {
 		float bestDistance = 999f;
 		Vector3 closestCover = CoverZero.position;
 		
-		previousChildNote = grid.NodeFromWorldPoint((Vector2)CoverZero.position);
-		childNode = previousChildNote;
+		if (previousChildNode == null){
+			previousChildNode = grid.NodeFromWorldPoint((Vector2)closestCover);
+		}  
+		childNode = previousChildNode;
 
 		foreach (Transform child in covers) {
-			currentDistance = Vector3.Distance((Vector2)Player.position, child.position);
 			
-			// childNodeR = grid.NodeFromWorldPoint((Vector2)child.position + (Vector2)child.right);
+			currentDistance = Vector2.Distance((Vector2)Player.position, child.position);
 			
 			childNode = grid.NodeFromWorldPoint((Vector2)child.position);
-			// childNodeL = grid.NodeFromWorldPoint((Vector2)child.position - (Vector2)child.right);
-			// childNodeL.busy = IdCounter;
-			// if (currentDistance < bestDistance && (Mathf.Abs(Mathf.Abs(Player.position.y) - Mathf.Abs(child.position.y)) < 0.4f)) {
 			if (currentDistance < bestDistance && (Mathf.Abs(Mathf.Abs(Player.position.y) - Mathf.Abs(child.position.y)) < 0.4f)) {
 				if (childNode.busy == 0 || childNode.busy == IdCounter) {
 					Vector3 coverSide = Player.InverseTransformPoint(child.position);
@@ -61,8 +59,9 @@ public class Unit : MonoBehaviour {
 					}
 					bestDistance = currentDistance;
 					childNode.busy = IdCounter;
-					previousChildNote.busy = 0;
-					previousChildNote = childNode;
+					previousChildNode.busy = 0;
+					previousChildNode = childNode;
+
 				}
 			}
 		}
@@ -88,14 +87,17 @@ public class Unit : MonoBehaviour {
 				previousPlayerPosition.walkable = true;
 				previousPlayerPosition = currentPlayerPosition;
 				currentPlayerPosition.walkable = false;
+
+				
+
 			}
 
 			// if (target != null) {
 				if (targetPositionOld != (Vector2)target) {
 					targetPositionOld = (Vector2)target;
 					path = Pathfinding.RequestPath (transform.position, target, IdCounter);
-					StopCoroutine ("FollowPath");
-					StartCoroutine ("FollowPath");
+					// StopCoroutine ("FollowPath");
+					// StartCoroutine ("FollowPath");
 				}	
 			// }
 			
