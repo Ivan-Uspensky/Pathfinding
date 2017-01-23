@@ -85,6 +85,10 @@ public class Grid : MonoBehaviour {
 		}
 		return null;
 	}
+
+	public Node GetNode(int x, int y) {
+		return grid[x,y];
+	}
 	
 	Node FindWalkableInRadius(int centreX, int centreY, int radius) {
 

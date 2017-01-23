@@ -77,9 +77,13 @@ public class Unit : MonoBehaviour {
 		Node currentPlayerPosition;
 		Node previousPlayerPosition = grid.NodeFromWorldPoint((Vector2)Player.position);
 
+		Node rightPos = null;
+		Node leftPos = null;
+		Node oldRightPos = null;
+		Node oldLeftPos = null;
+
 		while (true) {
 			
-
 			target = BehaveModel();
 	
 			currentPlayerPosition = grid.NodeFromWorldPoint((Vector2)Player.position);
@@ -88,9 +92,43 @@ public class Unit : MonoBehaviour {
 				previousPlayerPosition = currentPlayerPosition;
 				currentPlayerPosition.walkable = false;
 
-				
+				// TODO: make any cover as 3d object, 
+				// TODO: try again raycast, probably - lay down a bit origin of ray
 
-			}
+        		RaycastHit hit;
+
+        		if (Physics.Raycast(Player.position, Vector3.right, out hit)) {
+            		print("Found an object right : " + hit.collider.name + ", " + hit.point);
+            		rightPos = grid.NodeFromWorldPoint((Vector2)hit.point);
+            		print("right : " + rightPos.gridX);
+            		Debug.DrawLine(Player.position, hit.point);
+        		}
+            	if (Physics.Raycast(Player.position, -Vector3.right, out hit)) {
+            		print("Found an object left : " + hit.collider.name + ", " + hit.point);
+            		leftPos = grid.NodeFromWorldPoint((Vector2)hit.point);
+            		Debug.DrawLine(Player.position, hit.point);
+            		print("left : " + leftPos.gridX);
+            	}
+            	if (oldLeftPos != leftPos || oldRightPos != rightPos) {
+
+            		if (oldLeftPos != null && oldRightPos != null) { 
+	            		for (int i = oldLeftPos.gridX; i< oldRightPos.gridX; i++ ) {
+			            	Node temp = grid.GetNode(i, oldLeftPos.gridY);
+			            	temp.walkable = true;
+			            }
+			        }
+
+			        oldLeftPos = leftPos;
+	            	oldRightPos = rightPos;
+
+	            	if (leftPos != null && rightPos != null) { 
+		            	for (int i = leftPos.gridX; i< rightPos.gridX; i++ ) {
+		            		Node temp = grid.GetNode(i, leftPos.gridY);
+		            		temp.walkable = false;
+		            	}	
+	            	}
+	
+            	}
 
 			// if (target != null) {
 				if (targetPositionOld != (Vector2)target) {
@@ -100,7 +138,7 @@ public class Unit : MonoBehaviour {
 					// StartCoroutine ("FollowPath");
 				}	
 			// }
-			
+			}
 			yield return new WaitForSeconds (.2f);
 		}
 	}
