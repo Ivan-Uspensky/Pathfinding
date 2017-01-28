@@ -47,6 +47,7 @@ public class Unit : MonoBehaviour {
 			currentDistance = Vector2.Distance((Vector2)Player.position, child.position);
 			
 			childNode = grid.NodeFromWorldPoint((Vector2)child.position);
+			// print("child: " + childNode.busy);
 			if (currentDistance < bestDistance && (Mathf.Abs(Mathf.Abs(Player.position.y) - Mathf.Abs(child.position.y)) < 0.4f)) {
 				if (childNode.busy == 0 || childNode.busy == IdCounter) {
 					Vector3 coverSide = Player.InverseTransformPoint(child.position);
@@ -61,7 +62,6 @@ public class Unit : MonoBehaviour {
 					childNode.busy = IdCounter;
 					previousChildNode.busy = 0;
 					previousChildNode = childNode;
-
 				}
 			}
 		}
@@ -72,8 +72,6 @@ public class Unit : MonoBehaviour {
 		Vector3 target = CoverZero.position;
 		Vector2 targetPositionOld = (Vector2)CoverZero.position + Vector2.up; // ensure != to target.position initially
 
-		// Node currentBusyNode;
-		// Node previousBusyNode = grid.NodeFromWorldPoint((Vector2)CoverZero.position);
 		Node currentPlayerPosition;
 		Node previousPlayerPosition = grid.NodeFromWorldPoint((Vector2)Player.position);
 
@@ -92,22 +90,21 @@ public class Unit : MonoBehaviour {
 				previousPlayerPosition = currentPlayerPosition;
 				currentPlayerPosition.walkable = false;
 
-				// TODO: make any cover as 3d object, 
-				// TODO: try again raycast, probably - lay down a bit origin of ray
-
+				// TODO: Find out why bot choices can blink
         		RaycastHit hit;
-
         		if (Physics.Raycast(Player.position, Vector3.right, out hit)) {
-            		print("Found an object right : " + hit.collider.name + ", " + hit.point);
+            		// print("Found an object right : " + hit.collider.name + ", " + hit.point);
             		rightPos = grid.NodeFromWorldPoint((Vector2)hit.point);
-            		print("right : " + rightPos.gridX);
+            		// print("right : " + rightPos.gridX);
+            		print("right: " + hit.transform.gameObject.layer);
             		Debug.DrawLine(Player.position, hit.point);
         		}
             	if (Physics.Raycast(Player.position, -Vector3.right, out hit)) {
-            		print("Found an object left : " + hit.collider.name + ", " + hit.point);
+            		// print("Found an object left : " + hit.collider.name + ", " + hit.point);
             		leftPos = grid.NodeFromWorldPoint((Vector2)hit.point);
+            		// print("left : " + leftPos.gridX);
+            		print("left: " + hit.transform.gameObject.layer);
             		Debug.DrawLine(Player.position, hit.point);
-            		print("left : " + leftPos.gridX);
             	}
             	if (oldLeftPos != leftPos || oldRightPos != rightPos) {
 
@@ -127,7 +124,6 @@ public class Unit : MonoBehaviour {
 		            		temp.walkable = false;
 		            	}	
 	            	}
-	
             	}
 
 			// if (target != null) {
