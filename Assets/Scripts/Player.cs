@@ -18,28 +18,25 @@ public class Player : MonoBehaviour {
 	}
 	
 	void Update () {
-		// Vector3 moveInput = new Vector3 (Input.GetAxisRaw ("Horizontal"), Input.GetAxisRaw ("Vertical"), 0);
 		Vector3 moveInput = new Vector3 (Input.GetAxisRaw ("Horizontal"), 0, 0);
 		Vector3 moveVelocity = moveInput.normalized * moveSpeed;
 		controller.Move (moveVelocity);
 
 		if (Input.GetKey (KeyCode.UpArrow) && nextToDoor) {
 			moveSpeed = 0;
+			transform.position = new Vector3(transform.position.x, transform.position.y, -0.16f);
 			StartCoroutine(StairsMove(upperDoor));
-			// yield return new WaitForSeconds(1);
-			// transform.position = new Vector3(transform.position.x, upperDoor - 0.35f, transform.position.z);
 		}
 		if (Input.GetKey (KeyCode.DownArrow) && nextToDoor) {
 			moveSpeed = 0;
+			transform.position = new Vector3(transform.position.x, transform.position.y, -0.16f);
 			StartCoroutine(StairsMove(lowerDoor));
-			// yield return new WaitForSeconds(1);
-			// transform.position = new Vector3(transform.position.x, lowerDoor - 0.35f, transform.position.z);
 		}
 	}
 
 	IEnumerator StairsMove(float door) {
         yield return new WaitForSeconds(1);
-        transform.position = new Vector3(transform.position.x, door - 0.35f, transform.position.z);
+        transform.position = new Vector3(transform.position.x, door - 0.35f, -0.5f);
         moveSpeed = 5;
     }
 
@@ -54,8 +51,6 @@ public class Player : MonoBehaviour {
         	if (other.GetComponent<Stairs>().LowerDoor != null) {
         		lowerDoor = other.GetComponent<Stairs>().LowerDoor.position.y;
         	}
-        	// Debug.Log(upperDoor);
-        	// Debug.Log(lowerDoor);
         }
     }
 
