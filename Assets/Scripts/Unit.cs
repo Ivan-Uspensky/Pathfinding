@@ -58,19 +58,10 @@ public class Unit : MonoBehaviour {
 						closestCover = child.position - child.right;
 					}
 					
-					print("child " + childNode.gridX + " : " +  
-						childNode.gridY + "  , id: " + IdCounter + ", busy state: " + 
-						childNode.busy + ", prev: " + previousChildNode.gridX);
-
 					bestDistance = currentDistance;
-					// childNode.busy = IdCounter;
-					
-					// if (previousChildNode.gridX != childNode.gridY) {
-						
-						previousChildNode.busy = 0;
-						previousChildNode = childNode;
-						childNode.busy = IdCounter;
-					// }	
+					previousChildNode.busy = 0;
+					previousChildNode = childNode;
+					childNode.busy = IdCounter;
 				}
 			}
 		}
@@ -79,10 +70,15 @@ public class Unit : MonoBehaviour {
 
 	IEnumerator RefreshPath() {
 		Vector3 target = CoverZero.position;
+		// Vector3 target = Player.position;
 		Vector2 targetPositionOld = (Vector2)CoverZero.position + Vector2.up; // ensure != to target.position initially
+		// Vector2 targetPositionOld = (Vector2)CoverZero.position; // ensure != to target.position initially
 
 		Node currentPlayerPosition;
-		Node previousPlayerPosition = grid.NodeFromWorldPoint((Vector2)Player.position);
+		// Node previousPlayerPosition = grid.NodeFromWorldPoint((Vector2)Player.position + Vector2.up);
+		Node previousPlayerPosition = grid.NodeFromWorldPoint((Vector2)CoverZero.position + Vector2.up);
+
+		
 
 		Node rightPos = null;
 		Node leftPos = null;
@@ -129,14 +125,12 @@ public class Unit : MonoBehaviour {
 	            	}
             	}
 
-			// if (target != null) {
 				if (targetPositionOld != (Vector2)target) {
 					targetPositionOld = (Vector2)target;
 					path = Pathfinding.RequestPath (transform.position, target, IdCounter);
 					// StopCoroutine ("FollowPath");
 					// StartCoroutine ("FollowPath");
 				}	
-			// }
 			}
 			yield return new WaitForSeconds (.2f);
 		}
