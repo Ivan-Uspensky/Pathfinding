@@ -10,8 +10,9 @@ public class Player : MonoBehaviour {
 	
 	bool nextToDoor = false;
 	Vector3 offsetPosition;
-	float upperDoor;
-	float lowerDoor;
+	// float upperDoor;
+	// float lowerDoor;
+	float nextFloor;
 
 	void Start () {
 		controller = GetComponent<PlayerController> ();
@@ -21,17 +22,18 @@ public class Player : MonoBehaviour {
 		Vector3 moveInput = new Vector3 (Input.GetAxisRaw ("Horizontal"), 0, 0);
 		Vector3 moveVelocity = moveInput.normalized * moveSpeed;
 		controller.Move (moveVelocity);
-
-		if (Input.GetKey (KeyCode.UpArrow) && nextToDoor) {
+		Debug.Log(nextToDoor);
+		// if (Input.GetAxisRaw("Vertical") || Input.GetButtonDown("Jump") && nextToDoor) {
+		if ((Input.GetButtonDown("Action") || Input.GetButtonDown("Vertical")) && nextToDoor) {
 			moveSpeed = 0;
 			transform.position = new Vector3(transform.position.x, transform.position.y, -0.16f);
-			StartCoroutine(StairsMove(upperDoor));
+			StartCoroutine(StairsMove(nextFloor));
 		}
-		if (Input.GetKey (KeyCode.DownArrow) && nextToDoor) {
-			moveSpeed = 0;
-			transform.position = new Vector3(transform.position.x, transform.position.y, -0.16f);
-			StartCoroutine(StairsMove(lowerDoor));
-		}
+		// if (Input.GetKey (KeyCode.DownArrow) && nextToDoor) {
+		// 	moveSpeed = 0;
+		// 	transform.position = new Vector3(transform.position.x, transform.position.y, -0.16f);
+		// 	StartCoroutine(StairsMove(lowerDoor));
+		// }
 	}
 
 	IEnumerator StairsMove(float door) {
@@ -44,12 +46,14 @@ public class Player : MonoBehaviour {
 	void OnTriggerEnter(Collider other) {
         offsetPosition = other.gameObject.transform.position;
 		if (other.gameObject.layer == 12) {
-        	nextToDoor = true;	
+        	nextToDoor = true;
         	if (other.GetComponent<Stairs>().UpperDoor != null) {
-        		upperDoor = other.GetComponent<Stairs>().UpperDoor.position.y;
+        		// upperDoor = other.GetComponent<Stairs>().UpperDoor.position.y;
+        		nextFloor = other.GetComponent<Stairs>().UpperDoor.position.y;
         	}
         	if (other.GetComponent<Stairs>().LowerDoor != null) {
-        		lowerDoor = other.GetComponent<Stairs>().LowerDoor.position.y;
+        		// lowerDoor = other.GetComponent<Stairs>().LowerDoor.position.y;
+        		nextFloor = other.GetComponent<Stairs>().LowerDoor.position.y;
         	}
         }
     }
