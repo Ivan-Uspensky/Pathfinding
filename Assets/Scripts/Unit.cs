@@ -2,8 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 
+[RequireComponent (typeof(GunController))]
 public class Unit : MonoBehaviour {
 	
+	GunController gunController;
+
 	Grid grid;
 	GameObject go;
 
@@ -24,6 +27,7 @@ public class Unit : MonoBehaviour {
 	int targetIndex;
 
 	void Awake() {
+		gunController = GetComponent<GunController>();
 		go = GameObject.Find ("Pathfinding");
 		grid = go.GetComponent <Grid> ();
 	}
@@ -31,6 +35,10 @@ public class Unit : MonoBehaviour {
 	void Start() {
 		StartCoroutine (RefreshPath ());
 	}
+
+	// if (Input.GetMouseButton(0)) {
+	// 	gunController.Shoot();
+	// }
 
 	Vector3 BehaveModel() {
 		float currentDistance;
@@ -70,15 +78,10 @@ public class Unit : MonoBehaviour {
 
 	IEnumerator RefreshPath() {
 		Vector3 target = CoverZero.position;
-		// Vector3 target = Player.position;
 		Vector2 targetPositionOld = (Vector2)CoverZero.position + Vector2.up; // ensure != to target.position initially
-		// Vector2 targetPositionOld = (Vector2)CoverZero.position; // ensure != to target.position initially
 
 		Node currentPlayerPosition;
-		// Node previousPlayerPosition = grid.NodeFromWorldPoint((Vector2)Player.position + Vector2.up);
 		Node previousPlayerPosition = grid.NodeFromWorldPoint((Vector2)CoverZero.position + Vector2.up);
-
-		
 
 		Node rightPos = null;
 		Node leftPos = null;
