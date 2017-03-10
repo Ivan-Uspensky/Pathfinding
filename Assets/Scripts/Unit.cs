@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-
+[RequireComponent (typeof(GunController))]
 public class Unit : MonoBehaviour {
 	
 	Grid grid;
@@ -13,6 +13,7 @@ public class Unit : MonoBehaviour {
 	Node childNode;
 	Node previousChildNode;
 
+	GunController gunController;
 	public Transform Player;
 	public float speed = 20;
 	public LayerMask playerLayer;
@@ -26,7 +27,8 @@ public class Unit : MonoBehaviour {
 
 	void Awake() {
 		go = GameObject.Find ("Pathfinding");
-		grid = go.GetComponent <Grid> ();
+		grid = go.GetComponent<Grid>();
+		gunController = GetComponent<GunController>();
 	}
 
 	void Start() {
@@ -86,16 +88,13 @@ public class Unit : MonoBehaviour {
 		Node oldLeftPos = null;
 
 		while (true) {
-			
 			target = BehaveModel();
-	
 			currentPlayerPosition = grid.NodeFromWorldPoint((Vector2)Player.position);
 			if (currentPlayerPosition.gridX != previousPlayerPosition.gridX) {
 				previousPlayerPosition.walkable = true;
 				previousPlayerPosition = currentPlayerPosition;
 				currentPlayerPosition.walkable = false;
 
-				// TODO: Find out why bot choices can blink
         		RaycastHit hit;
         		if (Physics.Raycast(Player.position, Vector3.right, out hit)) {
             		rightPos = grid.NodeFromWorldPoint((Vector2)hit.point);
@@ -169,21 +168,26 @@ public class Unit : MonoBehaviour {
 					currentWaypoint = path [targetIndex];
 				}
 
-				transform.position = Vector2.MoveTowards (transform.position, currentWaypoint, speed * Time.deltaTime);
+				transform.position = Vector3.MoveTowards (transform.position, new Vector3(currentWaypoint.x, currentWaypoint.y, -0.5f), speed * Time.deltaTime);
 				Vector3 moveDirection = transform.InverseTransformPoint(currentWaypoint);
 				if (moveDirection.x < 0) {
 					transform.localRotation = Quaternion.Euler(0, 180, 0);
 				}
+				
+				if (Vector2.Distance((Vector2)Player.position, (Vector2)transform.position) < 5f) {
+					StopCoroutine ("ShootToPlayer");
+				}
+				
 				yield return null;
 
 			}
 		}
 	}
 
-	// IEnumerator ShootPlayer() {
-	// 	gunController.Shoot();
-	// 	yield return null;
-	// }
+	IEnumerator ShootToPlayer() {
+		gunController.Shoot();
+		yield return null;
+	}
 
 	public void OnDrawGizmos() {
 		if (path != null) {

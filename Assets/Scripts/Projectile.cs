@@ -19,10 +19,10 @@ public class Projectile : MonoBehaviour {
 		float spread = Random.Range (-SpreadRange, SpreadRange);
 		spreadVector = new Vector3(spread, spread, 1);
 
-		Collider[] initialCollisions = Physics.OverlapSphere (transform.position, .1f, collisionMask);
-		if (initialCollisions.Length > 0) {
-			OnHitObject(initialCollisions[0], transform.position);
-		}
+		// Collider[] initialCollisions = Physics.OverlapSphere (transform.position, .1f, collisionMask);
+		// if (initialCollisions.Length > 0) {
+		// 	OnHitObject(initialCollisions[0], transform.position);
+		// }
 	}
 	
 	public void SetSpeed(float newSpeed) {
@@ -31,24 +31,25 @@ public class Projectile : MonoBehaviour {
 
 	void Update () {
 		float moveDistance = Time.deltaTime * speed;
-		CheckCollisions (moveDistance);
+		// CheckCollisions (moveDistance);   !!!
 		// transform.Translate (spreadVector * moveDistance);
 		transform.Translate (Vector3.right * moveDistance);
-		Debug.Log(transform.position.x);
-		Debug.Log(transform.position.y);
-		Debug.Log(transform.position.z);
 	}
 
-	void CheckCollisions(float moveDistance) {
-		Ray ray = new Ray (transform.position, transform.forward);
-		RaycastHit hit;
+	// void CheckCollisions(float moveDistance) {
+	// 	Ray ray = new Ray (transform.position, transform.forward);
+	// 	RaycastHit hit;
 
-		if (Physics.Raycast(ray, out hit, moveDistance + skinWidth, collisionMask, QueryTriggerInteraction.Collide)) {
-			OnHitObject(hit.collider, hit.point);
-		}
-	}
+	// 	if (Physics.Raycast(ray, out hit, moveDistance + skinWidth, collisionMask, QueryTriggerInteraction.Collide)) {
+	// 		OnHitObject(hit.collider, hit.point);
+	// 	}
+	// }
 
-	void OnHitObject(Collider c, Vector3 hitPoint) {
+	// void OnHitObject(Collider c, Vector3 hitPoint) {
+	// 	Debug.Log(c.name);
+	// 	GameObject.Destroy (gameObject);
+	// }
+	void OnTriggerEnter(Collider other) {
 		GameObject.Destroy (gameObject);
 	}
 }
