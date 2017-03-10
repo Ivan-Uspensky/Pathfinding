@@ -3505,7 +3505,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1400756352}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 400f6217c09c60646b7be67b12ee3f47, type: 3}
   m_Name: 
@@ -4502,7 +4502,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 2fe6938f04445463bb8f1d008e3cc672, type: 2}
+  - {fileID: 2100000, guid: c905570c753f941cdb9928ddf601b830, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
@@ -5083,7 +5083,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: c905570c753f941cdb9928ddf601b830, type: 2}
+  - {fileID: 2100000, guid: 2fe6938f04445463bb8f1d008e3cc672, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
