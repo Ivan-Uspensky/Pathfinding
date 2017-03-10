@@ -2,11 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
-[RequireComponent (typeof(GunController))]
+
 public class Unit : MonoBehaviour {
 	
-	GunController gunController;
-
 	Grid grid;
 	GameObject go;
 
@@ -27,7 +25,6 @@ public class Unit : MonoBehaviour {
 	int targetIndex;
 
 	void Awake() {
-		gunController = GetComponent<GunController>();
 		go = GameObject.Find ("Pathfinding");
 		grid = go.GetComponent <Grid> ();
 	}
@@ -128,12 +125,18 @@ public class Unit : MonoBehaviour {
 	            	}
             	}
 
+    //         	if (Vector2.Distance((Vector2)Player.position, (Vector2)transform.position) < 20f) {
+				// 	StartCoroutine("ShootPlayer");
+				// }
+
 				if (targetPositionOld != (Vector2)target) {
 					targetPositionOld = (Vector2)target;
 					path = Pathfinding.RequestPath (transform.position, target, IdCounter);
-					// StopCoroutine ("FollowPath");
-					// StartCoroutine ("FollowPath");
-				}	
+					StopCoroutine ("FollowPath");
+					StartCoroutine ("FollowPath");
+				}
+
+
 			}
 			yield return new WaitForSeconds (.2f);
 		}
@@ -167,11 +170,20 @@ public class Unit : MonoBehaviour {
 				}
 
 				transform.position = Vector2.MoveTowards (transform.position, currentWaypoint, speed * Time.deltaTime);
+				Vector3 moveDirection = transform.InverseTransformPoint(currentWaypoint);
+				if (moveDirection.x < 0) {
+					transform.localRotation = Quaternion.Euler(0, 180, 0);
+				}
 				yield return null;
 
 			}
 		}
 	}
+
+	// IEnumerator ShootPlayer() {
+	// 	gunController.Shoot();
+	// 	yield return null;
+	// }
 
 	public void OnDrawGizmos() {
 		if (path != null) {

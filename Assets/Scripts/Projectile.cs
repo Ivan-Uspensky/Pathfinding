@@ -32,7 +32,11 @@ public class Projectile : MonoBehaviour {
 	void Update () {
 		float moveDistance = Time.deltaTime * speed;
 		CheckCollisions (moveDistance);
-		transform.Translate (spreadVector * moveDistance);
+		// transform.Translate (spreadVector * moveDistance);
+		transform.Translate (Vector3.right * moveDistance);
+		Debug.Log(transform.position.x);
+		Debug.Log(transform.position.y);
+		Debug.Log(transform.position.z);
 	}
 
 	void CheckCollisions(float moveDistance) {
