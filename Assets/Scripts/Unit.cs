@@ -96,11 +96,13 @@ public class Unit : MonoBehaviour {
 				currentPlayerPosition.walkable = false;
 
         		RaycastHit hit;
-        		if (Physics.Raycast(Player.position, Vector3.right, out hit)) {
+        		// if (Physics.Raycast(Player.position, Vector3.right, out hit)) {
+				if (Physics.Raycast(new Vector3(Player.position.x, Player.position.y - .2f, Player.position.z), Vector3.right, out hit)) {
             		rightPos = grid.NodeFromWorldPoint((Vector2)hit.point);
             		Debug.DrawLine(Player.position, hit.point);
         		}
-            	if (Physics.Raycast(Player.position, -Vector3.right, out hit)) {
+            	// if (Physics.Raycast(Player.position, -Vector3.right, out hit)) {
+				if (Physics.Raycast(new Vector3(Player.position.x, Player.position.y - .2f, Player.position.z), -Vector3.right, out hit)) {
             		leftPos = grid.NodeFromWorldPoint((Vector2)hit.point);
             		Debug.DrawLine(Player.position, hit.point);
             	}
@@ -168,25 +170,15 @@ public class Unit : MonoBehaviour {
 					currentWaypoint = path [targetIndex];
 				}
 
+				float moveDirX = Mathf.Sign(currentWaypoint.x - transform.position.x);
+				// if at waypoint, maintain prior rotation
+				if (moveDirX != 0) { 
+					transform.eulerAngles = Vector3.up * ((moveDirX == 1) ? 1 : 180);
+				}
 				transform.position = Vector3.MoveTowards (transform.position, new Vector3(currentWaypoint.x, currentWaypoint.y, -0.5f), speed * Time.deltaTime);
-				Vector3 moveDirection = transform.InverseTransformPoint(currentWaypoint);
-				if (moveDirection.x < 0) {
-					transform.localRotation = Quaternion.Euler(0, 180, 0);
-				}
-				
-				if (Vector2.Distance((Vector2)Player.position, (Vector2)transform.position) < 5f) {
-					StopCoroutine ("ShootToPlayer");
-				}
-				
 				yield return null;
-
 			}
 		}
-	}
-
-	IEnumerator ShootToPlayer() {
-		gunController.Shoot();
-		yield return null;
 	}
 
 	public void OnDrawGizmos() {
