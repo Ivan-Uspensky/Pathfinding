@@ -55,7 +55,7 @@ MonoBehaviour:
   Spark: {fileID: 4000012141219224, guid: be62c742df19c9e4f9fb1346ea6952a2, type: 2}
   collisionMask:
     serializedVersion: 2
-    m_Bits: 1792
+    m_Bits: 1280
   SpreadRange: 1
 --- !u!120 &120000011745293680
 LineRenderer:

@@ -51,7 +51,7 @@ public class Projectile : MonoBehaviour {
 
 	void OnHitObject(Collider c, Vector3 hitPoint) {
 		GameObject.Destroy (gameObject);
-		Transform hitParticle = Instantiate(Spark, hitPoint, Quaternion.FromToRotation (Vector3.forward, -transform.forward)) as Transform;
+		Transform hitParticle = Instantiate(Spark, hitPoint, Quaternion.FromToRotation (Vector3.forward, -transform.right)) as Transform;
 		Destroy(hitParticle.gameObject, 1f);
 	}
 }

@@ -22,18 +22,11 @@ public class Player : MonoBehaviour {
 		Vector3 moveInput = new Vector3 (Input.GetAxisRaw ("Horizontal"), 0, 0);
 		Vector3 moveVelocity = moveInput.normalized * moveSpeed;
 		controller.Move (moveVelocity);
-		// Debug.Log(nextToDoor);
-		// if (Input.GetAxisRaw("Vertical") || Input.GetButtonDown("Jump") && nextToDoor) {
 		if ((Input.GetButtonDown("Action") || Input.GetButtonDown("Vertical")) && nextToDoor) {
 			moveSpeed = 0;
 			transform.position = new Vector3(transform.position.x, transform.position.y, -0.16f);
 			StartCoroutine(StairsMove(nextFloor));
 		}
-		// if (Input.GetKey (KeyCode.DownArrow) && nextToDoor) {
-		// 	moveSpeed = 0;
-		// 	transform.position = new Vector3(transform.position.x, transform.position.y, -0.16f);
-		// 	StartCoroutine(StairsMove(lowerDoor));
-		// }
 	}
 
 	IEnumerator StairsMove(float door) {
