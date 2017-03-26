@@ -35,10 +35,6 @@ public class Unit : MonoBehaviour {
 		StartCoroutine (RefreshPath ());
 	}
 
-	// if (Input.GetMouseButton(0)) {
-	// 	gunController.Shoot();
-	// }
-
 	Vector3 BehaveModel() {
 		float currentDistance;
 		float bestDistance = 999f;
@@ -47,14 +43,12 @@ public class Unit : MonoBehaviour {
 		if (previousChildNode == null){
 			previousChildNode = grid.NodeFromWorldPoint((Vector2)closestCover);
 		}  
-		//childNode = previousChildNode;
 
 		foreach (Transform child in covers) {
 			
 			currentDistance = Vector2.Distance((Vector2)Player.position, child.position);
 			childNode = grid.NodeFromWorldPoint((Vector2)child.position);
 			if (currentDistance < bestDistance && (Mathf.Abs(Mathf.Abs(Player.position.y) - Mathf.Abs(child.position.y)) < 0.4f)) {
-			// if (currentDistance < bestDistance) {
 				if (childNode.busy == 0 || childNode.busy == IdCounter) {
 					Vector3 coverSide = Player.InverseTransformPoint(child.position);
 					if (coverSide.x > 0) {
@@ -72,6 +66,10 @@ public class Unit : MonoBehaviour {
 				}
 			}
 		}
+		//TODO: add check the distance between transform and Player
+		//when transform is in cover. 
+		// If dist is lower than X go to cover 
+		// If dist is more than X get grid point that is near to X dist
 		return closestCover;
 	}
 
@@ -125,10 +123,6 @@ public class Unit : MonoBehaviour {
 		            	}	
 	            	}
             	}
-
-    //         	if (Vector2.Distance((Vector2)Player.position, (Vector2)transform.position) < 20f) {
-				// 	StartCoroutine("ShootPlayer");
-				// }
 
 				if (targetPositionOld != (Vector2)target) {
 					targetPositionOld = (Vector2)target;

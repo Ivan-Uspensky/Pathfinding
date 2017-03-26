@@ -24,7 +24,3 @@ public class ShootPlayer : MonoBehaviour {
 		}
 	}
 }
-
-// if (Physics.Raycast(new Vector3(Player.position.x, Player.position.y - .2f, Player.position.z), Vector3.right, out hit)) {
-
-// if (Physics.Raycast(ray, out hit, moveDistance, collisionMask, QueryTriggerInteraction.Collide)) {
