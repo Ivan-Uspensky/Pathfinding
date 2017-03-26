@@ -4,22 +4,25 @@ using System.Collections;
 public class Node : IHeapItem<Node> {
 	
 	public bool walkable;
-	public int busy;
 	public Vector2 worldPosition;
 	public int gridX;
 	public int gridY;
+	//Added params
+	public int busy;
+	public string type;
 
 	public int gCost;
 	public int hCost;
 	public Node parent;
 	int heapIndex;
 	
-	public Node(bool _walkable, Vector2 _worldPos, int _gridX, int _gridY, int _busy) {
+	public Node(bool _walkable, Vector2 _worldPos, int _gridX, int _gridY, int _busy, string _type) {
 		walkable = _walkable;
 		worldPosition = _worldPos;
 		gridX = _gridX;
 		gridY = _gridY;
 		busy = _busy;
+		type = _type;
 	}
 
 	public int fCost {

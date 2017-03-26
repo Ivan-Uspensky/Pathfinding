@@ -5,25 +5,26 @@ using System.Collections.Generic;
 [RequireComponent (typeof(GunController))]
 public class Unit : MonoBehaviour {
 	
-	Grid grid;
-	GameObject go;
-
-	Node childNodeL;
-	Node childNodeR;
-	Node childNode;
-	Node previousChildNode;
-
-	GunController gunController;
 	public Transform Player;
 	public float speed = 20;
 	public LayerMask playerLayer;
 	public Transform covers;
 	public Transform CoverZero;
 	public int IdCounter;
+	
+	Grid grid;
+	GameObject go;
+	GunController gunController;
 
+	Node childNodeL;
+	Node childNodeR;
+	Node childNode;
+	Node previousChildNode;
 
 	Vector2[] path;
 	int targetIndex;
+
+	string state = "";
 
 	void Awake() {
 		go = GameObject.Find ("Pathfinding");
@@ -44,32 +45,38 @@ public class Unit : MonoBehaviour {
 			previousChildNode = grid.NodeFromWorldPoint((Vector2)closestCover);
 		}  
 
-		foreach (Transform child in covers) {
+		if (state == "Finished" && (Vector2.Distance((Vector2)Player.position, (Vector2)transform.position) > 4.7f)) {
+			Vector3 playerSide = Player.InverseTransformPoint(transform.position);
+			RaycastHit hit;
 			
-			currentDistance = Vector2.Distance((Vector2)Player.position, child.position);
-			childNode = grid.NodeFromWorldPoint((Vector2)child.position);
-			if (currentDistance < bestDistance && (Mathf.Abs(Mathf.Abs(Player.position.y) - Mathf.Abs(child.position.y)) < 0.4f)) {
-				if (childNode.busy == 0 || childNode.busy == IdCounter) {
-					Vector3 coverSide = Player.InverseTransformPoint(child.position);
-					if (coverSide.x > 0) {
-						//player is on left side, get right cover
-						closestCover = child.position + child.right;
-					} else {
-						//player is on right side, get left cover
-						closestCover = child.position - child.right;
+			if (playerSide.x > 0) {
+				closestCover = (Vector2)Player.position + (Vector2.right * 4.7f);
+			} else {
+				closestCover = (Vector2)Player.position - (Vector2.right * 4.7f);
+			}	
+		} else {
+			foreach (Transform child in covers) {
+				currentDistance = Vector2.Distance((Vector2)Player.position, child.position);
+				childNode = grid.NodeFromWorldPoint((Vector2)child.position);
+				if (currentDistance < bestDistance && (Mathf.Abs(Mathf.Abs(Player.position.y) - Mathf.Abs(child.position.y)) < 0.4f)) {
+					if (childNode.busy == 0 || childNode.busy == IdCounter) {
+						Vector3 coverSide = Player.InverseTransformPoint(child.position);
+						if (coverSide.x > 0) {
+							//player is on left side, get right cover
+							closestCover = child.position + child.right;
+						} else {
+							//player is on right side, get left cover
+							closestCover = child.position - child.right;
+						}
+						bestDistance = currentDistance;
+						previousChildNode.busy = 0;
+						previousChildNode = childNode;
+						childNode.busy = IdCounter;
 					}
-					
-					bestDistance = currentDistance;
-					previousChildNode.busy = 0;
-					previousChildNode = childNode;
-					childNode.busy = IdCounter;
 				}
 			}
 		}
-		//TODO: add check the distance between transform and Player
-		//when transform is in cover. 
-		// If dist is lower than X go to cover 
-		// If dist is more than X get grid point that is near to X dist
+		
 		return closestCover;
 	}
 
@@ -105,7 +112,6 @@ public class Unit : MonoBehaviour {
             		Debug.DrawLine(Player.position, hit.point);
             	}
             	if (oldLeftPos != leftPos || oldRightPos != rightPos) {
-
             		if (oldLeftPos != null && oldRightPos != null) { 
 	            		for (int i = oldLeftPos.gridX; i< oldRightPos.gridX; i++ ) {
 			            	Node temp = grid.GetNode(i, oldLeftPos.gridY);
@@ -157,8 +163,10 @@ public class Unit : MonoBehaviour {
 
 			while (true) {
 				if ((Vector2)transform.position == currentWaypoint) {
+					state = "Moving";
 					targetIndex++;
 					if (targetIndex >= path.Length) {
+						state = "Finished";
 						yield break;
 					}
 					currentWaypoint = path [targetIndex];

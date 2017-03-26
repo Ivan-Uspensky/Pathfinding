@@ -7,6 +7,9 @@ public class Grid : MonoBehaviour {
 	public bool displayGridGizmos;
 
 	public LayerMask unwalkableMask;
+	//saved for later
+	public LayerMask elevatorMask;
+	public LayerMask coverMask;
 	public Vector2 gridWorldSize;
 	public float nodeRadius;
 
@@ -36,7 +39,13 @@ public class Grid : MonoBehaviour {
 			for (int y = 0; y < gridSizeY; y ++) {
 				Vector2 worldPoint = worldBottomLeft + Vector2.right * (x * nodeDiameter + nodeRadius) + Vector2.up * (y * nodeDiameter + nodeRadius);
 				bool walkable = (Physics.CheckSphere(worldPoint,nodeRadius,unwalkableMask) == false); // if no collider2D is returned by overlap circle, then this node is walkable
-				grid[x,y] = new Node(walkable, worldPoint, x, y, 0);
+				
+				string type = "";
+				if (Physics.CheckSphere(worldPoint,nodeRadius,coverMask) == true) {
+					type = "Obstacle";
+				}
+				// Add elevator check
+				grid[x,y] = new Node(walkable, worldPoint, x, y, 0, type);
 			}
 		}
 	}

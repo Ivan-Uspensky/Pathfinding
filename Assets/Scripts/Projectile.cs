@@ -40,11 +40,10 @@ public class Projectile : MonoBehaviour {
 
 	void CheckCollisions(float moveDistance) {
 		Ray ray = new Ray (transform.position, transform.right);
-		print(transform.position);
 		RaycastHit hit;
 
 		if (Physics.Raycast(ray, out hit, moveDistance, collisionMask, QueryTriggerInteraction.Collide)) {
-			print("something to hit!");
+			// print("something to hit!");
 			OnHitObject(hit.collider, hit.point);
 		}
 	}
