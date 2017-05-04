@@ -122,12 +122,12 @@ public class Unit : MonoBehaviour {
 			        oldLeftPos = leftPos;
 	            	oldRightPos = rightPos;
 
-	            	if (leftPos != null && rightPos != null) { 
-		            	for (int i = leftPos.gridX; i< rightPos.gridX; i++ ) {
-		            		Node temp = grid.GetNode(i, leftPos.gridY);
-		            		temp.walkable = false;
-		            	}	
-	            	}
+	            	// if (leftPos != null && rightPos != null) { 
+		            // 	for (int i = leftPos.gridX; i< rightPos.gridX; i++ ) {
+		            // 		Node temp = grid.GetNode(i, leftPos.gridY);
+		            // 		temp.walkable = false;
+		            // 	}	
+	            	// }
             	}
 
 				if (targetPositionOld != (Vector2)target) {
@@ -136,8 +136,6 @@ public class Unit : MonoBehaviour {
 					StopCoroutine ("FollowPath");
 					StartCoroutine ("FollowPath");
 				}
-
-
 			}
 			yield return new WaitForSeconds (.2f);
 		}
