@@ -170,11 +170,13 @@ public class Unit : MonoBehaviour {
 					currentWaypoint = path [targetIndex];
 				}
 
-				float moveDirX = Mathf.Sign(currentWaypoint.x - transform.position.x);
+				// float moveDirX = Mathf.Sign(currentWaypoint.x - transform.position.x);
+				Vector2 direction = (Vector2)transform.position + currentWaypoint;
 				// if at waypoint, maintain prior rotation
-				if (moveDirX != 0) { 
-					transform.eulerAngles = Vector3.up * ((moveDirX == 1) ? 1 : 180);
-				}
+				// if (moveDirX != 0) { 
+				// transform.eulerAngles = Vector3.up * ((moveDirX == 1) ? 1 : 180);
+				transform.eulerAngles = direction;
+				// }
 				transform.position = Vector3.MoveTowards (transform.position, new Vector3(currentWaypoint.x, currentWaypoint.y, -0.5f), speed * Time.deltaTime);
 				yield return null;
 			}
