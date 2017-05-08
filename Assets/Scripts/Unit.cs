@@ -133,8 +133,8 @@ public class Unit : MonoBehaviour {
 				if (targetPositionOld != (Vector2)target) {
 					targetPositionOld = (Vector2)target;
 					path = Pathfinding.RequestPath (transform.position, target, IdCounter);
-					StopCoroutine ("FollowPath");
-					StartCoroutine ("FollowPath");
+					// StopCoroutine ("FollowPath");
+					// StartCoroutine ("FollowPath");
 				}
 			}
 			yield return new WaitForSeconds (.2f);
@@ -170,12 +170,15 @@ public class Unit : MonoBehaviour {
 					currentWaypoint = path [targetIndex];
 				}
 
-				// float moveDirX = Mathf.Sign(currentWaypoint.x - transform.position.x);
-				Vector2 direction = (Vector2)transform.position + currentWaypoint;
+				if (transform.position.x - currentWaypoint.x < 0 ) {
+					transform.eulerAngles = Vector3.up;
+				} else {
+					transform.eulerAngles = Vector3.up * 180;
+				}
+				
 				// if at waypoint, maintain prior rotation
 				// if (moveDirX != 0) { 
 				// transform.eulerAngles = Vector3.up * ((moveDirX == 1) ? 1 : 180);
-				transform.eulerAngles = direction;
 				// }
 				transform.position = Vector3.MoveTowards (transform.position, new Vector3(currentWaypoint.x, currentWaypoint.y, -0.5f), speed * Time.deltaTime);
 				yield return null;

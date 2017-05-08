@@ -37,21 +37,23 @@ public class Player : MonoBehaviour {
 
 
 	void OnTriggerEnter(Collider other) {
-        offsetPosition = other.gameObject.transform.position;
+		offsetPosition = other.gameObject.transform.position;
 		if (other.gameObject.layer == 12) {
-        	nextToDoor = true;
+			nextToDoor = true;
         	if (other.GetComponent<Stairs>().UpperDoor != null) {
-        		// upperDoor = other.GetComponent<Stairs>().UpperDoor.position.y;
-        		nextFloor = other.GetComponent<Stairs>().UpperDoor.position.y;
+				nextFloor = other.GetComponent<Stairs>().UpperDoor.position.y;
         	}
         	if (other.GetComponent<Stairs>().LowerDoor != null) {
-        		// lowerDoor = other.GetComponent<Stairs>().LowerDoor.position.y;
-        		nextFloor = other.GetComponent<Stairs>().LowerDoor.position.y;
+				nextFloor = other.GetComponent<Stairs>().LowerDoor.position.y;
         	}
         }
     }
 
+	void OnTriggerStay(Collider other) {
+		nextToDoor = true;
+	}
+
     void OnTriggerExit(Collider other) {
-        nextToDoor = false;
+		nextToDoor = false;
 	}
 }
