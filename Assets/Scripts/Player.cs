@@ -10,8 +10,6 @@ public class Player : MonoBehaviour {
 	
 	bool nextToDoor = false;
 	Vector3 offsetPosition;
-	// float upperDoor;
-	// float lowerDoor;
 	float nextFloor;
 
 	void Start () {
@@ -31,7 +29,7 @@ public class Player : MonoBehaviour {
 
 	IEnumerator StairsMove(float door) {
         yield return new WaitForSeconds(1);
-        transform.position = new Vector3(transform.position.x, door - 0.35f, -0.5f);
+        transform.position = new Vector3(transform.position.x, door - 0.2f, -0.5f);
         moveSpeed = 5;
     }
 

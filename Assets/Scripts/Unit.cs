@@ -26,6 +26,8 @@ public class Unit : MonoBehaviour {
 
 	string state = "";
 
+	Vector2 prevRotation;
+
 	void Awake() {
 		go = GameObject.Find ("Pathfinding");
 		grid = go.GetComponent<Grid>();
@@ -133,8 +135,8 @@ public class Unit : MonoBehaviour {
 				if (targetPositionOld != (Vector2)target) {
 					targetPositionOld = (Vector2)target;
 					path = Pathfinding.RequestPath (transform.position, target, IdCounter);
-					// StopCoroutine ("FollowPath");
-					// StartCoroutine ("FollowPath");
+					StopCoroutine ("FollowPath");
+					StartCoroutine ("FollowPath");
 				}
 			}
 			yield return new WaitForSeconds (.2f);
@@ -170,16 +172,25 @@ public class Unit : MonoBehaviour {
 					currentWaypoint = path [targetIndex];
 				}
 
-				if (transform.position.x - currentWaypoint.x < 0 ) {
-					transform.eulerAngles = Vector3.up;
-				} else {
-					transform.eulerAngles = Vector3.up * 180;
-				}
+				// if (transform.position.x - currentWaypoint.x < 0 ) {
+				// 	transform.eulerAngles = Vector3.up;
+				// } else {
+				// 	transform.eulerAngles = Vector3.up * 180;
+				// }
 				
 				// if at waypoint, maintain prior rotation
 				// if (moveDirX != 0) { 
 				// transform.eulerAngles = Vector3.up * ((moveDirX == 1) ? 1 : 180);
 				// }
+
+				Vector2 direction = (currentWaypoint - (Vector2)transform.position).normalized;
+				if (direction != prevRotation) {
+					Debug.Log("direction: " + direction + ", prevRotation: " + prevRotation);
+					transform.eulerAngles = Vector3.up * 180;
+					prevRotation = direction;
+					Debug.Log("updated prevRotation: " + prevRotation);
+				}
+				
 				transform.position = Vector3.MoveTowards (transform.position, new Vector3(currentWaypoint.x, currentWaypoint.y, -0.5f), speed * Time.deltaTime);
 				yield return null;
 			}

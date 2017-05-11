@@ -12,7 +12,8 @@ public class ShootPlayer : MonoBehaviour {
 	}
 	
 	void Update () {
-       	if (Vector2.Distance((Vector2)Player.position, (Vector2)transform.position) < 5f) {
+       	Debug.Log(transform.position + " AND " + Player.position);
+		   if (Vector2.Distance((Vector2)Player.position, (Vector2)transform.position) < 5f) {
 			RaycastHit hit;
 			if (Physics.Raycast (gunController.weaponHold.position, Vector3.right, out hit)) {
 				Debug.DrawLine(gunController.weaponHold.position, hit.point);
