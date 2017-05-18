@@ -26,7 +26,7 @@ public class Unit : MonoBehaviour {
 
 	string state = "";
 
-	Vector2 prevRotation;
+	Vector2 prevRotation = Vector2.right;
 
 	void Awake() {
 		go = GameObject.Find ("Pathfinding");
@@ -184,12 +184,25 @@ public class Unit : MonoBehaviour {
 				// }
 
 				Vector2 direction = (currentWaypoint - (Vector2)transform.position).normalized;
-				if (direction != prevRotation) {
-					Debug.Log("direction: " + direction + ", prevRotation: " + prevRotation);
+				Vector2 rotation = new Vector2( transform.eulerAngles.x, transform.eulerAngles.y );
+
+				if (direction != Vector2.right && rotation.y == 0) {
+					Debug.Log("first, d: " + direction + ", r: " + rotation);
 					transform.eulerAngles = Vector3.up * 180;
-					prevRotation = direction;
-					Debug.Log("updated prevRotation: " + prevRotation);
 				}
+				if (direction == Vector2.right && rotation.y != 0) {
+					Debug.Log("second, d: " + direction + ", r: " + rotation);
+					transform.eulerAngles = Vector3.up * 0;
+				} 
+
+
+				// Debug.Log("euler angles: " + rotation);
+				// if (direction != prevRotation) {
+				// 	Debug.Log("direction: " + direction + ", prevRotation: " + prevRotation);
+				// 	transform.eulerAngles = Vector3.up * 180;
+				// 	prevRotation = direction;
+				// 	Debug.Log("updated prevRotation: " + prevRotation);
+				// }
 				
 				transform.position = Vector3.MoveTowards (transform.position, new Vector3(currentWaypoint.x, currentWaypoint.y, -0.5f), speed * Time.deltaTime);
 				yield return null;
