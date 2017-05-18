@@ -26,7 +26,8 @@ public class Unit : MonoBehaviour {
 
 	string state = "";
 
-	Vector2 prevRotation = Vector2.right;
+	Vector2 direction;
+	Vector2 rotation;
 
 	void Awake() {
 		go = GameObject.Find ("Pathfinding");
@@ -84,7 +85,7 @@ public class Unit : MonoBehaviour {
 
 	IEnumerator RefreshPath() {
 		Vector3 target = CoverZero.position;
-		Vector2 targetPositionOld = (Vector2)CoverZero.position + Vector2.up; // ensure != to target.position initially
+		Vector2 targetPositionOld = (Vector2)CoverZero.position + Vector2.up;
 
 		Node currentPlayerPosition;
 		Node previousPlayerPosition = grid.NodeFromWorldPoint((Vector2)CoverZero.position + Vector2.up);
@@ -172,38 +173,18 @@ public class Unit : MonoBehaviour {
 					currentWaypoint = path [targetIndex];
 				}
 
-				// if (transform.position.x - currentWaypoint.x < 0 ) {
-				// 	transform.eulerAngles = Vector3.up;
-				// } else {
-				// 	transform.eulerAngles = Vector3.up * 180;
-				// }
-				
-				// if at waypoint, maintain prior rotation
-				// if (moveDirX != 0) { 
-				// transform.eulerAngles = Vector3.up * ((moveDirX == 1) ? 1 : 180);
-				// }
-
-				Vector2 direction = (currentWaypoint - (Vector2)transform.position).normalized;
-				Vector2 rotation = new Vector2( transform.eulerAngles.x, transform.eulerAngles.y );
+				//rotation
+				direction = (currentWaypoint - (Vector2)transform.position).normalized;
+				rotation = new Vector2( transform.eulerAngles.x, transform.eulerAngles.y );
 
 				if (direction != Vector2.right && rotation.y == 0) {
-					Debug.Log("first, d: " + direction + ", r: " + rotation);
 					transform.eulerAngles = Vector3.up * 180;
 				}
 				if (direction == Vector2.right && rotation.y != 0) {
-					Debug.Log("second, d: " + direction + ", r: " + rotation);
 					transform.eulerAngles = Vector3.up * 0;
 				} 
 
-
-				// Debug.Log("euler angles: " + rotation);
-				// if (direction != prevRotation) {
-				// 	Debug.Log("direction: " + direction + ", prevRotation: " + prevRotation);
-				// 	transform.eulerAngles = Vector3.up * 180;
-				// 	prevRotation = direction;
-				// 	Debug.Log("updated prevRotation: " + prevRotation);
-				// }
-				
+				//movement to next step
 				transform.position = Vector3.MoveTowards (transform.position, new Vector3(currentWaypoint.x, currentWaypoint.y, -0.5f), speed * Time.deltaTime);
 				yield return null;
 			}
