@@ -136,15 +136,14 @@ public class Unit : MonoBehaviour {
 				if (targetPositionOld != (Vector2)target) {
 					targetPositionOld = (Vector2)target;
 					path = Pathfinding.RequestPath (transform.position, target, IdCounter);
-					StopCoroutine ("FollowPath");
-					StartCoroutine ("FollowPath");
+					// StopCoroutine ("FollowPath");
+					// StartCoroutine ("FollowPath");
 				}
 			}
 			yield return new WaitForSeconds (.2f);
 		}
 	}
-		
-	// IEnumerator RefreshPath() {
+	//IEnumerator RefreshPath() {
 	// 	Vector2 targetPositionOld = (Vector2)Player.position + Vector2.up; // ensure != to target.position initially
 	// 	while (true) {
 	// 		if (targetPositionOld != (Vector2)Player.position) {
@@ -156,7 +155,6 @@ public class Unit : MonoBehaviour {
 	// 		yield return new WaitForSeconds (.25f);
 	// 	}
 	// }
-
 	IEnumerator FollowPath() {
 		if (path.Length > 0) {
 			targetIndex = 0;
